@@ -2,6 +2,8 @@ package com.ly.lygymprogress.controller;
 
 import com.ly.lygymprogress.dto.UserRequestDto;
 import com.ly.lygymprogress.dto.UserResponseDto;
+import com.ly.lygymprogress.dto.UserWeightRequestDto;
+import com.ly.lygymprogress.dto.UserWeightResponseDto;
 import com.ly.lygymprogress.model.Users;
 import com.ly.lygymprogress.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,8 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    ResponseEntity<Optional<Users>> findUser(@PathVariable Long id){
-        return ResponseEntity.ok(userService.findUser(id));
+    ResponseEntity<UserWeightResponseDto> findUser(@PathVariable Long id){
+        return ResponseEntity.ok(userService.findUserWithWeight(id));
     }
 
     @PostMapping("/users")
@@ -32,14 +34,10 @@ public class UserController {
         return ResponseEntity.ok(userService.addUser(dto));
     }
 
-    @DeleteMapping("/users/{id}")
-    ResponseEntity<String> deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User id " + id + " is deleted!!");
-    }
-
-    @PutMapping("/users/{id}")
-    ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestDto dto){
-        return ResponseEntity.ok(userService.updateUser(id,dto));
+    @PostMapping("/users/weights")
+    ResponseEntity<UserWeightResponseDto> updateWeight(
+            @RequestBody UserWeightRequestDto dto
+            ){
+        return ResponseEntity.ok(userService.updateUserWeight(dto));
     }
 }

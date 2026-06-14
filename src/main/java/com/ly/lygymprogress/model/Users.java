@@ -3,6 +3,8 @@ package com.ly.lygymprogress.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,9 +17,8 @@ public class Users {
 
     private String username;
     private Long age;
-    @Column(name = "weight_before")
-    private Double weightBefore;
-    @Column(name = "weight_after")
-    private Double weightAfter;
     private Double height;
+
+    @OneToMany(mappedBy = "user")
+    private List<Weights> weights;
 }

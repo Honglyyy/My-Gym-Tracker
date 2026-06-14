@@ -2,9 +2,14 @@ package com.ly.lygymprogress.service;
 
 import com.ly.lygymprogress.dto.UserRequestDto;
 import com.ly.lygymprogress.dto.UserResponseDto;
+import com.ly.lygymprogress.dto.UserWeightRequestDto;
+import com.ly.lygymprogress.dto.UserWeightResponseDto;
 import com.ly.lygymprogress.model.Users;
+import com.ly.lygymprogress.model.Weights;
 import com.ly.lygymprogress.repository.UsersRepository;
+import com.ly.lygymprogress.repository.WeightsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UsersRepository usersRepository;
+    private  final WeightsRepository weightsRepository;
 
     public List<Users> findUsers(){
         return usersRepository.findAll();
@@ -28,36 +34,53 @@ public class UserService {
         Users user = new Users();
         user.setUsername(request.username());
         user.setAge(request.age());
-        user.setWeightBefore(request.weightBefore());
-        user.setWeightAfter(request.weightAfter());
         user.setHeight(request.height());
-
         Users savedUser = usersRepository.save(user);
 
         return UserResponseDto.builder()
                 .username(savedUser.getUsername())
                 .age(savedUser.getAge())
-                .weightBefore(savedUser.getWeightBefore())
-                .weightAfter(savedUser.getWeightAfter())
                 .height(savedUser.getHeight())
                 .build();
     }
 
-    public void deleteUser(Long id){
-        usersRepository.deleteById(id);
+    public UserWeightResponseDto findUserWithWeight(Long id) {
+
+        Users user = usersRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Weights latestWeight = weightsRepository
+                .findTopByUser_IdOrderByCreatedAtDesc(id)
+                .orElseThrow(() -> new RuntimeException("Weight not found"));
+
+        return new UserWeightResponseDto(
+                user.getUsername(),
+                user.getAge(),
+                latestWeight.getWeightBefore(),
+                latestWeight.getWeightAfter(),
+                user.getHeight()
+        );
     }
 
-    public UserResponseDto updateUser(Long id, UserRequestDto dto){
-        Users existingUser = usersRepository.findById(id).orElseThrow(()->new RuntimeException("User not found!!"));
 
-        existingUser.setUsername(dto.username());
-        existingUser.setAge(dto.age());
-        existingUser.setWeightBefore(dto.weightBefore());
-        existingUser.setWeightAfter(dto.weightAfter());
-        existingUser.setHeight(dto.height());
+    public UserWeightResponseDto updateUserWeight(UserWeightRequestDto dto) {
+        Users existingUser = usersRepository.findById(dto.userId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        usersRepository.save(existingUser);
-        return UserResponseDto.builder()
-                .username(existingUser.getUsername()).age(existingUser.getAge()).weightBefore(existingUser.getWeightBefore()).weightAfter(existingUser.getWeightAfter()).height(existingUser.getHeight()).build();
+        Weights latestWeight = new Weights();
+        latestWeight.setWeightBefore(dto.weightBefore());
+        latestWeight.setWeightAfter(dto.weightAfter());
+
+        latestWeight.setUser(existingUser);
+
+        weightsRepository.save(latestWeight);
+
+        return new UserWeightResponseDto(
+                existingUser.getUsername(),
+                existingUser.getAge(),
+                latestWeight.getWeightBefore(),
+                latestWeight.getWeightAfter(),
+                existingUser.getHeight()
+        );
     }
 }
