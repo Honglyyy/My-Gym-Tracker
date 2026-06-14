@@ -9,7 +9,6 @@ public record ExerciseResponseDto(
         Long id,
         String exerciseName,
         String muscleGroup,
-        String workoutSession,
         List<WorkoutSetResponseDto> workoutSets
 ) {
 }

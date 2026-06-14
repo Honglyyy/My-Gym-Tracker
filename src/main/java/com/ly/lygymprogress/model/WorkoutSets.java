@@ -16,6 +16,9 @@ public class WorkoutSets {
     @ManyToOne
     private Exercises exercise;
 
+    @ManyToOne
+    private WorkoutSessions workoutSession;
+
     private String reps;
     private String weight;
 }

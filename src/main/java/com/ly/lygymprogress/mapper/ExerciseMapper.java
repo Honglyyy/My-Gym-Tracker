@@ -26,7 +26,6 @@ public class ExerciseMapper {
                 .id(exercises.getId())
                 .exerciseName(exercises.getExerciseName())
                 .muscleGroup(muscleGroupName)
-                .workoutSession(exercises.getWorkoutSession() != null ? exercises.getWorkoutSession().getSessionName() : null)
                 .workoutSets(exercises.getWorkoutSets() != null
                         ? exercises.getWorkoutSets().stream().map(workoutSetMapper::toDto).toList()
                         : Collections.emptyList())

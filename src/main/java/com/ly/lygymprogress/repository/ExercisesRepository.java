@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface ExercisesRepository extends JpaRepository<Exercises, Long> {
     List<Exercises> findByMuscleGroup_MuscleGroups(MuscleGroupsEnum muscleGroup);
-    List<Exercises> findByWorkoutSession_Id(Long sessionId);
 }

@@ -1,5 +1,6 @@
 package com.ly.lygymprogress.controller;
 
+import com.ly.lygymprogress.dto.ExerciseRequestDto;
 import com.ly.lygymprogress.dto.ExerciseResponseDto;
 import com.ly.lygymprogress.dto.WorkoutSetRequestDto;
 import com.ly.lygymprogress.dto.WorkoutSetResponseDto;
@@ -29,10 +30,20 @@ public class ExerciseController {
         return ResponseEntity.ok(exerciseService.findExerciseById(id));
     }
 
+    @PutMapping("/exercises/{id}")
+    ResponseEntity<ExerciseResponseDto> updateExercise(@PathVariable Long id, @RequestBody ExerciseRequestDto dto){
+        return ResponseEntity.ok(exerciseService.updateExercise(id, dto));
+    }
+
     @DeleteMapping("/exercises/{id}")
     ResponseEntity<Void> deleteExercise(@PathVariable Long id){
         exerciseService.deleteExercise(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/exercises")
+    ResponseEntity<ExerciseResponseDto> addExercise(@RequestBody ExerciseRequestDto dto){
+        return ResponseEntity.ok(exerciseService.addExercise(dto));
     }
 
     @PostMapping("/exercises/sets")

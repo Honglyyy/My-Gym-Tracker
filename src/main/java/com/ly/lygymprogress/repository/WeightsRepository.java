@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface WeightsRepository extends JpaRepository<Weights, Long> {
     Optional<Weights> findTopByUser_IdOrderByCreatedAtDesc(Long userId);
+    java.util.List<Weights> findAllByUser_IdOrderByCreatedAtDesc(Long userId);
 }

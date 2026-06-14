@@ -1,7 +1,6 @@
 package com.ly.lygymprogress.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +16,9 @@ public class Splits {
     private Long id;
 
     private String splitName;
+
+    @OneToMany(mappedBy = "split", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SplitSession> sessions;
 
     @OneToMany(mappedBy = "split")
     private List<WorkoutSessions> workoutSessions;

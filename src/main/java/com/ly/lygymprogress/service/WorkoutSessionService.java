@@ -10,6 +10,7 @@ import com.ly.lygymprogress.repository.WorkoutSessionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,7 +21,7 @@ public class WorkoutSessionService {
     private final SplitsRepository splitsRepository;
 
     public List<WorkoutSessionResponseDto> findWorkoutSessions(){
-        return workoutSessionsRepository.findAll().stream().map(workoutSessionMapper::toDto).toList();
+        return workoutSessionsRepository.findAllByOrderBySessionDateDescIdDesc().stream().map(workoutSessionMapper::toDto).toList();
     }
 
     public WorkoutSessionResponseDto addWorkoutSession(WorkoutSessionRequestDto dto){
@@ -28,6 +29,7 @@ public class WorkoutSessionService {
                 .orElseThrow(()-> new RuntimeException("Split not found"));
         WorkoutSessions workoutSession = new WorkoutSessions();
         workoutSession.setSessionName(dto.sessionName());
+        workoutSession.setSessionDate(dto.sessionDate() != null ? dto.sessionDate() : LocalDate.now());
         workoutSession.setSplit(split);
 
         workoutSessionsRepository.save(workoutSession);
@@ -36,10 +38,12 @@ public class WorkoutSessionService {
     }
 
     public WorkoutSessionResponseDto updateWorkoutSession(Long id, WorkoutSessionRequestDto dto){
-        Splits split = splitsRepository.findById(id)
+        WorkoutSessions workoutSession = workoutSessionsRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Workout session not found"));
+        Splits split = splitsRepository.findById(dto.splitId())
                 .orElseThrow(()-> new RuntimeException("Split not found"));
-        WorkoutSessions workoutSession = new WorkoutSessions();
         workoutSession.setSessionName(dto.sessionName());
+        workoutSession.setSessionDate(dto.sessionDate() != null ? dto.sessionDate() : workoutSession.getSessionDate());
         workoutSession.setSplit(split);
 
         workoutSessionsRepository.save(workoutSession);

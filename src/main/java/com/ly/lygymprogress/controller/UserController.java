@@ -1,17 +1,12 @@
 package com.ly.lygymprogress.controller;
 
-import com.ly.lygymprogress.dto.UserRequestDto;
-import com.ly.lygymprogress.dto.UserResponseDto;
-import com.ly.lygymprogress.dto.UserWeightRequestDto;
-import com.ly.lygymprogress.dto.UserWeightResponseDto;
-import com.ly.lygymprogress.model.Users;
+import com.ly.lygymprogress.dto.*;
 import com.ly.lygymprogress.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    ResponseEntity<List<Users>> findUsers(){
+    ResponseEntity<List<UserResponseDto>> findUsers(){
         return ResponseEntity.ok(userService.findUsers());
     }
 
@@ -34,10 +29,24 @@ public class UserController {
         return ResponseEntity.ok(userService.addUser(dto));
     }
 
+    @PutMapping("/users/{id}")
+    ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestDto dto){
+        return ResponseEntity.ok(userService.updateUser(id, dto));
+    }
+
+    @DeleteMapping("/users/{id}")
+    ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/users/{id}/weights")
+    ResponseEntity<List<WeightResponseDto>> findWeightHistory(@PathVariable Long id){
+        return ResponseEntity.ok(userService.findWeightHistory(id));
+    }
+
     @PostMapping("/users/weights")
-    ResponseEntity<UserWeightResponseDto> updateWeight(
-            @RequestBody UserWeightRequestDto dto
-            ){
+    ResponseEntity<UserWeightResponseDto> updateWeight(@RequestBody UserWeightRequestDto dto){
         return ResponseEntity.ok(userService.updateUserWeight(dto));
     }
 }

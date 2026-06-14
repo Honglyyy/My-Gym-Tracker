@@ -3,7 +3,6 @@ package com.ly.lygymprogress.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -11,19 +10,22 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WorkoutSessions {
+public class SplitSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "session_name")
     private String sessionName;
 
-    private LocalDate sessionDate;
-
     @ManyToOne
+    @JoinColumn(name = "split_id")
     private Splits split;
 
-    @OneToMany(mappedBy = "workoutSession")
-    private List<WorkoutSets> workoutSets;
+    @ManyToMany
+    @JoinTable(
+            name = "split_session_exercises",
+            joinColumns = @JoinColumn(name = "split_session_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_id")
+    )
+    private List<Exercises> exercises;
 }

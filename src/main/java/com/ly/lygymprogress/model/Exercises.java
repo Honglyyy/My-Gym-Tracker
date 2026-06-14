@@ -21,8 +21,8 @@ public class Exercises {
     @ManyToOne
     private MuscleGroups muscleGroup;
 
-    @ManyToOne
-    private WorkoutSessions workoutSession;
+    @ManyToMany(mappedBy = "exercises")
+    private List<SplitSession> sessions;
 
     @OneToMany(mappedBy = "exercise")
     private List<WorkoutSets> workoutSets;

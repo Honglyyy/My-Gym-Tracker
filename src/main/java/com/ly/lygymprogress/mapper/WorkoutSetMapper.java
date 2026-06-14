@@ -12,6 +12,9 @@ public class WorkoutSetMapper {
         }
         return WorkoutSetResponseDto.builder()
                 .id(workoutSets.getId())
+                .exerciseId(workoutSets.getExercise() != null ? workoutSets.getExercise().getId() : null)
+                .exerciseName(workoutSets.getExercise() != null ? workoutSets.getExercise().getExerciseName() : null)
+                .workoutSessionId(workoutSets.getWorkoutSession() != null ? workoutSets.getWorkoutSession().getId() : null)
                 .reps(workoutSets.getReps())
                 .weight(workoutSets.getWeight())
                 .build();
