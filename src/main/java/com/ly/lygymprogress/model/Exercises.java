@@ -18,7 +18,7 @@ public class Exercises {
     @Column(name = "exercise_name")
     private String exerciseName;
 
-    @Enumerated(value = EnumType.STRING)
+    @ManyToOne
     private MuscleGroups muscleGroup;
 
     @ManyToOne

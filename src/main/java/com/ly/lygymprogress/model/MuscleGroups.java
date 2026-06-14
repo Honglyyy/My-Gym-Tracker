@@ -1,22 +1,26 @@
 package com.ly.lygymprogress.model;
 
-public enum MuscleGroups {
-    //PUSH MUSCLE GROUP
-    CHEST,
-    SHOULDER,
-    TRICEPS,
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    //PULL MUSCLE GROUP
-    BICEPS,
-    BACK,
-    LATS,
+import java.util.List;
 
-    //LEGS
-    GLUTES,
-    QUADS,
-    HAMSTRINGS,
-    CALVES,
-    INNER_THIGHS,
-    OUTER_THIGHS,
-    ERECTOR
-}
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class MuscleGroups {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(value = EnumType.STRING)
+    private MuscleGroupsEnum muscleGroups;
+
+    @OneToMany(mappedBy = "muscleGroup")
+    private List<Exercises> exercises;
+    }
