@@ -24,6 +24,6 @@ public class WorkoutSessions {
     @ManyToOne
     private Splits split;
 
-    @OneToMany(mappedBy = "workoutSession")
+    @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkoutSets> workoutSets;
 }
