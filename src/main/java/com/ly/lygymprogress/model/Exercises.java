@@ -24,6 +24,6 @@ public class Exercises {
     @ManyToMany(mappedBy = "exercises")
     private List<SplitSession> sessions;
 
-    @OneToMany(mappedBy = "exercise")
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkoutSets> workoutSets;
 }

@@ -59,6 +59,14 @@ public class ExerciseService {
     }
 
     public void deleteExercise(Long id) {
-        exercisesRepository.deleteById(id);
+        Exercises exercise = exercisesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Exercise not found"));
+        
+        // Remove from all split sessions
+        for (com.ly.lygymprogress.model.SplitSession session : exercise.getSessions()) {
+            session.getExercises().remove(exercise);
+        }
+        
+        exercisesRepository.delete(exercise);
     }
 }
